@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAA Strategic Plan Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base font and background for the entire page */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light gray-blue background */
+            color: #334155; /* Darker gray text */
+        }
+        /* Main container for the tracker content */
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto; /* Center the container with vertical margin */
+            padding: 1.5rem;
+            background-color: #ffffff; /* White background for the card */
+            border-radius: 12px; /* Rounded corners for the container */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
+        }
+        /* Styling for section headers (e.g., BOOST MEDIA PRESENCE) */
+        .section-header {
+            background-color: #e0f2fe; /* Light blue background */
+            color: #0284c7; /* Darker blue text */
+            padding: 0.75rem 1rem;
+            border-radius: 8px; /* Rounded corners */
+            margin-bottom: 1rem;
+            font-weight: 600; /* Semi-bold */
+            font-size: 1.125rem; /* Larger font size */
+        }
+        /* Styling for individual tactic cards */
+        .tactic-card {
+            background-color: #f8fafc; /* Very light gray background */
+            border: 1px solid #e2e8f0; /* Light border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease-in-out; /* Smooth transition for hover effects */
+        }
+        /* Hover effect for tactic cards */
+        .tactic-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow on hover */
+            border-color: #93c5fd; /* Light blue border on hover */
+        }
+        /* Styling for the title of each tactic */
+        .tactic-title {
+            font-weight: 600; /* Semi-bold */
+            color: #1e293b; /* Dark gray text */
+            margin-bottom: 0.5rem;
+        }
+        /* Grouping for input elements */
+        .input-group {
+            margin-bottom: 0.75rem;
+        }
+        /* Labels for input fields */
+        .input-group label {
+            display: block; /* Makes label take full width, putting input on next line */
+            font-size: 0.875rem; /* Smaller font size */
+            color: #475569; /* Medium gray text */
+            margin-bottom: 0.25rem;
+        }
+        /* Styling for various input types */
+        .input-group input[type="date"],
+        .input-group input[type="number"],
+        .input-group textarea,
+        .input-group select {
+            width: 100%; /* Full width */
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #cbd5e1; /* Light gray border */
+            border-radius: 6px; /* Slightly rounded corners */
+            font-size: 0.9rem;
+            color: #334155; /* Darker gray text */
+        }
+        /* Specific styling for textareas */
+        .input-group textarea {
+            min-height: 80px; /* Minimum height */
+            resize: vertical; /* Allow vertical resizing */
+        }
+        /* Container for the progress bar */
+        .progress-bar-container {
+            background-color: #e2e8f0; /* Light gray background */
+            border-radius: 9999px; /* Fully rounded corners */
+            height: 8px;
+            margin-top: 0.5rem;
+            overflow: hidden; /* Hide overflow for the bar itself */
+        }
+        /* Actual progress bar */
+        .progress-bar {
+            height: 100%;
+            border-radius: 9999px; /* Fully rounded corners */
+            text-align: center;
+            color: white;
+            font-size: 0.75rem;
+            transition: width 0.3s ease-in-out; /* Smooth width transition */
+        }
+        /* Tailwind CSS background colors for progress bar status */
+        .bg-red-500 { background-color: #ef4444; }
+        .bg-yellow-500 { background-color: #f59e0b; }
+        .bg-green-500 { background-color: #22c55e; }
+        .bg-blue-500 { background-color: #3b82f6; } /* For 'Not Started' or general default */
+
+        /* Status badges (not currently used in JS, but good for future expansion) */
+        .status-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        .status-not-started { background-color: #64748b; }
+        .status-in-progress { background-color: #f59e0b; }
+        .status-at-risk { background-color: #ef4444; }
+        .status-completed { background-color: #22c55e; }
+
+        /* Styling for save button */
+        .save-button {
+            background-color: #0ea5e9; /* Sky blue */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+        .save-button:hover {
+            background-color: #0284c7; /* Darker blue on hover */
+        }
+        /* Styling for export button */
+        .export-button {
+            background-color: #10b981; /* Emerald green */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+            margin-left: 1rem; /* Space from save button */
+        }
+        .export-button:hover {
+            background-color: #059669; /* Darker green on hover */
+        }
+        /* Styling for import button */
+        .import-button {
+            background-color: #6366f1; /* Indigo */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+            margin-left: 1rem;
+        }
+        .import-button:hover {
+            background-color: #4338ca; /* Darker indigo on hover */
+        }
+
+
+        /* Modal overlay */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+        }
+        /* Modal content box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px; /* Max width for readability */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Soft shadow */
+            text-align: center;
+        }
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        .modal-content button {
+            background-color: #0ea5e9;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            border: none;
+        }
+        .modal-content button:hover {
+            background-color: #0284c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">ADAA Strategic Plan Tracker</h1>
+        <p class="text-center text-gray-600 mb-8">Input details and metrics for each tactic to track progress and report to the board.</p>
+
+        <div id="strategicPlan">
+            <!-- PILLAR 1 -->
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">PILLAR 1: Elevate the ADAA Brand</h2>
+            <p class="text-gray-700 mb-4">Goal: Be the preeminent trusted resource for professionals and the public regarding anxiety, depression, and related disorders.</p>
+
+            <div class="section-header">BOOST MEDIA PRESENCE</div>
+            <div id="boostMediaPresence" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Tactic 1.1 -->
+                <div class="tactic-card">
+                    <div class="tactic-title">1. Develop a dedicated ADAA microsite linked to Lancôme’s digital platform</div>
+                    <div class="input-group">
+                        <label for="microsite_status">Status:</label>
+                        <select id="microsite_status" onchange="updateProgress('microsite')">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="microsite_progress">Progress (%):</label>
+                        <input type="number" id="microsite_progress" min="0" max="100" value="0" oninput="updateProgress('microsite')">
+                        <div class="progress-bar-container"><div id="microsite_progress_bar" class="progress-bar bg-blue-500" style="width:0%;"></div></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="microsite_notes">Notes/Challenges:</label>
+                        <textarea id="microsite_notes" placeholder="e.g., Content development underway, awaiting final design approval."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="microsite_metrics">Key Metrics/Results:</label>
+                        <textarea id="microsite_metrics" placeholder="e.g., Site traffic, user engagement, conversion rates post-launch."></textarea>
+                    </div>
+                </div>
+
+                <!-- Tactic 1.2 -->
+                <div class="tactic-card">
+                    <div class="tactic-title">2. Strategically Re-imagine Personal Story Utilization</div>
+                    <div class="input-group">
+                        <label for="stories_status">Status:</label>
+                        <select id="stories_status" onchange="updateProgress('stories')">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="stories_progress">Progress (%):</label>
+                        <input type="number" id="stories_progress" min="0" max="100" value="0" oninput="updateProgress('stories')">
+                        <div class="progress-bar-container"><div id="stories_progress_bar" class="progress-bar bg-blue-500" style="width:0%;"></div></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="stories_notes">Notes/Challenges:</label>
+                        <textarea id="stories_notes" placeholder="e.g., Developing submission guidelines, identifying pilot participants."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="stories_metrics">Key Metrics/Results:</label>
+                        <textarea id="stories_metrics" placeholder="e.g., Number of multimedia stories collected, engagement rate of new content."></textarea>
+                    </div>
+                </div>
+
+                <!-- Tactic 1.3 -->
+                <div class="tactic-card">
+                    <div class="tactic-title">3. Evaluate and Optimize VuMedi Partnership</div>
+                    <div class="input-group">
+                        <label for="vumedi_status">Status:</label>
+                        <select id="vumedi_status" onchange="updateProgress('vumedi')">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="vumedi_progress">Progress (%):</label>
+                        <input type="number" id="vumedi_progress" min="0" max="100" value="0" oninput="updateProgress('vumedi')">
+                        <div class="progress-bar-container"><div id="vumedi_progress_bar" class="progress-bar bg-blue-500" style="width:0%;"></div></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="vumedi_notes">Notes/Challenges:</label>
+                        <textarea id="vumedi_notes" placeholder="e.g., Awaiting Q2 analytics report, scheduling review meeting."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="vumedi_metrics">Key Metrics/Results:</label>
+                        <textarea id="vumedi_metrics" placeholder="e.g., Webinar views, engagement rates, professional reach."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header mt-8">IMPLEMENT AND ENHANCE INNOVATIVE TECHNOLOGIES</div>
+            <div id="innovativeTech" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Tactic 2.1 -->
+                <div class="tactic-card">
+                    <div class="tactic-title">1. Execute Comprehensive Digital Overhaul of ADAA Website and Microsite</div>
+                    <div class="input-group">
+                        <label for="website_overhaul_status">Status:</label>
+                        <select id="website_overhaul_status" onchange="updateProgress('website_overhaul')">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="website_overhaul_progress">Progress (%):</label>
+                        <input type="number" id="website_overhaul_progress" min="0" max="100" value="0" oninput="updateProgress('website_overhaul')">
+                        <div class="progress-bar-container"><div id="website_overhaul_progress_bar" class="progress-bar bg-blue-500" style="width:0%;"></div></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="website_overhaul_notes">Notes/Challenges:</label>
+                        <textarea id="website_overhaul_notes" placeholder="e.g., Vendor selection complete, taxonomy mapping in progress."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="website_overhaul_metrics">Key Metrics/Results:</label>
+                        <textarea id="website_overhaul_metrics" placeholder="e.g., Launch date, site performance metrics, user satisfaction scores."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header mt-8">EXPAND PARTNERSHIPS</div>
+            <div id="expandPartnerships" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Tactic 3.1 -->
+                <div class="tactic-card">
+                    <div class="tactic-title">1. Execute and Evaluate Lancôme Global Partnership (Contract through 2027)</div>
+                    <div class="input-group">
+                        <label for="lancome_status">Status:</label>
+                        <select id="lancome_status" onchange="updateProgress('lancome')">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="lancome_progress">Progress (%):</label>
+                        <input type="number" id="lancome_progress" min="0" max="100" value="0" oninput="updateProgress('lancome')">
+                        <div class="progress-bar-container"><div id="lancome_progress_bar" class="progress-bar bg-blue-500" style="width:0%;"></div></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="lancome_notes">Notes/Challenges:</label>
+                        <textarea id="lancome_notes" placeholder="e.g., Campaign launch preparation, expert network onboarding."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="lancome_metrics">Key Metrics/Results:</label>
+                        <textarea id="lancome_metrics" placeholder="e.g., Campaign reach, microsite engagement, new expert collaborations."></textarea>
+                    </div>
+                </div>
+
+                <!-- Tactic 3.2 -->
+                <div class="tactic-card">
+                    <div class="tactic-title">2. Secure and Plan Cigna Men's Mental Health Campaign (2026)</div>
+                    <div class="input-group">
+                        <label for="cigna_status">Status:</label>
+                        <select id="cigna_status" onchange="updateProgress('cigna')">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="cigna_progress">Progress (%):</label>
+                        <input type="number" id="cigna_progress" min="0" max="100" value="0" oninput="updateProgress('cigna')">
+                        <div class="progress-bar-container"><div id="cigna_progress_bar" class="progress-bar bg-blue-500" style="width:0%;"></div></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="cigna_notes">Notes/Challenges:</label>
+                        <textarea id="cigna_notes" placeholder="e.g., Proposal submission date, board feedback received."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="cigna_metrics">Key Metrics/Results:</label>
+                        <textarea id="cigna_metrics" placeholder="e.g., Funding secured amount, campaign launch date, initial engagement."></textarea>
+                    </div>
+                </div>
+
+                <!-- Tactic 3.3 -->
+                <div class="tactic-card">
+                    <div class="tactic-title">3. Explore New Professional Society Partnerships</div>
+                    <div class="input-group">
+                        <label for="society_partnerships_status">Status:</label>
+                        <select id="society_partnerships_status" onchange="updateProgress('society_partnerships')">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="society_partnerships_progress">Progress (%):</label>
+                        <input type="number" id="society_partnerships_progress" min="0" max="100" value="0" oninput="updateProgress('society_partnerships')">
+                        <div class="progress-bar-container"><div id="society_partnerships_progress_bar" class="progress-bar bg-blue-500" style="width:0%;"></div></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="society_partnerships_notes">Notes/Challenges:</label>
+                        <textarea id="society_partnerships_notes" placeholder="e.g., Initial outreach to OB/GYN societies, identifying key contacts."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="society_partnerships_metrics">Key Metrics/Results:</label>
+                        <textarea id="society_partnerships_metrics" placeholder="e.g., Number of new partnerships secured, joint initiatives launched."></textarea>
+                    </div>
+                </div>
+
+                <!-- Tactic 3.4 -->
+                <div class="tactic-card">
+                    <div class="tactic-title">4. Nurture and Optimize Existing Partnerships</div>
+                    <div class="input-group">
+                        <label for="existing_partnerships_status">Status:</label>
+                        <select id="existing_partnerships_status" onchange="updateProgress('existing_partnerships')">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="At Risk">At Risk</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="existing_partnerships_progress">Progress (%):</label>
+                        <input type="number" id="existing_partnerships_progress" min="0" max="100" value="0" oninput="updateProgress('existing_partnerships')">
+                        <div class="progress-bar-container"><div id="existing_partnerships_progress_bar" class="progress-bar bg-blue-500" style="width:0%;"></div></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="existing_partnerships_notes">Notes/Challenges:</label>
+                        <textarea id="existing_partnerships_notes" placeholder="e.g., Q2 review meetings scheduled, identifying areas for deeper collaboration."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="existing_partnerships_metrics">Key Metrics/Results:</label>
+                        <textarea id="existing_partnerships_metrics" placeholder="e.g., Number of joint projects, partner satisfaction, renewed agreements."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center mt-8">
+            <button class="save-button" onclick="saveData()">Save Progress</button>
+            <button class="export-button" onclick="exportData()">Export Data (JSON)</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+            <button class="import-button" onclick="document.getElementById('importFile').click()">Import Data</button>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h3>Progress Saved!</h3>
+            <p>Your data has been successfully saved locally.</p>
+            <button onclick="closeModal('successModal')">OK</button>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <h3>Export Data</h3>
+            <p>Your data has been exported as a JSON file.</p>
+            <button onclick="closeModal('exportModal')">OK</button>
+        </div>
+    </div>
+
+    <div id="importSuccessModal" class="modal">
+        <div class="modal-content">
+            <h3>Data Imported!</h3>
+            <p>Your data has been successfully imported.</p>
+            <button onclick="closeModal('importSuccessModal')">OK</button>
+        </div>
+    </div>
+
+    <div id="importErrorModal" class="modal">
+        <div class="modal-content">
+            <h3>Import Error!</h3>
+            <p>Failed to import data. Please ensure the file is a valid JSON.</p>
+            <button onclick="closeModal('importErrorModal')">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to update progress bar and status badge
+        function updateProgress(tacticId) {
+            const progressInput = document.getElementById(`${tacticId}_progress`);
+            const progressBar = document.getElementById(`${tacticId}_progress_bar`);
+            const statusSelect = document.getElementById(`${tacticId}_status`);
+
+            let progress = parseInt(progressInput.value);
+            if (isNaN(progress) || progress < 0) progress = 0;
+            if (progress > 100) progress = 100;
+            progressInput.value = progress;
+
+            progressBar.style.width = `${progress}%`;
+
+            // Update color based on progress or status
+            let colorClass = '';
+            if (statusSelect.value === 'Completed') {
+                colorClass = 'bg-green-500';
+            } else if (statusSelect.value === 'At Risk') {
+                colorClass = 'bg-red-500';
+            } else if (statusSelect.value === 'In Progress') {
+                colorClass = 'bg-yellow-500';
+            } else { // Not Started
+                colorClass = 'bg-blue-500';
+            }
+            progressBar.className = `progress-bar ${colorClass}`;
+        }
+
+        // Function to save data to local storage
+        function saveData() {
+            const data = {};
+            const tacticCards = document.querySelectorAll('.tactic-card');
+            tacticCards.forEach(card => {
+                const id = card.querySelector('select').id.replace('_status', '');
+                data[id] = {
+                    status: document.getElementById(`${id}_status`).value,
+                    progress: document.getElementById(`${id}_progress`).value,
+                    notes: document.getElementById(`${id}_notes`).value,
+                    metrics: document.getElementById(`${id}_metrics`).value
+                };
+            });
+            localStorage.setItem('adaaStrategicPlanData', JSON.stringify(data));
+            openModal('successModal');
+        }
+
+        // Function to load data from local storage
+        function loadData() {
+            const savedData = localStorage.getItem('adaaStrategicPlanData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                for (const id in data) {
+                    if (document.getElementById(`${id}_status`)) {
+                        document.getElementById(`${id}_status`).value = data[id].status;
+                    }
+                    if (document.getElementById(`${id}_progress`)) {
+                        document.getElementById(`${id}_progress`).value = data[id].progress;
+                    }
+                    if (document.getElementById(`${id}_notes`)) {
+                        document.getElementById(`${id}_notes`).value = data[id].notes;
+                    }
+                    if (document.getElementById(`${id}_metrics`)) {
+                        document.getElementById(`${id}_metrics`).value = data[id].metrics;
+                    }
+                    updateProgress(id); // Update progress bar and color on load
+                }
+            }
+        }
+
+        // Function to export data as JSON file
+        function exportData() {
+            const data = {};
+            const tacticCards = document.querySelectorAll('.tactic-card');
+            tacticCards.forEach(card => {
+                const id = card.querySelector('select').id.replace('_status', '');
+                data[id] = {
+                    tactic: card.querySelector('.tactic-title').textContent,
+                    status: document.getElementById(`${id}_status`).value,
+                    progress: document.getElementById(`${id}_progress`).value,
+                    notes: document.getElementById(`${id}_notes`).value,
+                    metrics: document.getElementById(`${id}_metrics`).value
+                };
+            });
+            const jsonData = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'adaa_strategic_plan_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            openModal('exportModal');
+        }
+
+        // Function to import data from a JSON file
+        async function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    for (const id in importedData) {
+                        if (document.getElementById(`${id}_status`)) {
+                            document.getElementById(`${id}_status`).value = importedData[id].status;
+                        }
+                        if (document.getElementById(`${id}_progress`)) {
+                            document.getElementById(`${id}_progress`).value = importedData[id].progress;
+                        }
+                        if (document.getElementById(`${id}_notes`)) {
+                            document.getElementById(`${id}_notes`).value = importedData[id].notes;
+                        }
+                        if (document.getElementById(`${id}_metrics`)) {
+                            document.getElementById(`${id}_metrics`).value = importedData[id].metrics;
+                        }
+                        updateProgress(id);
+                    }
+                    saveData(); // Save imported data to local storage
+                    openModal('importSuccessModal');
+                } catch (error) {
+                    console.error("Error importing data:", error);
+                    openModal('importErrorModal');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Load data when the page loads
+        window.onload = loadData;
+    </script>
+</body>
+</html>
